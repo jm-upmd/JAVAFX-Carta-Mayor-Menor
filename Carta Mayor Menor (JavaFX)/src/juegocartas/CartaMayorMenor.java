@@ -27,7 +27,10 @@ public class CartaMayorMenor extends Application {
 	private Mano mano; // Cartas que han sido repartidas en la partida.
 	private String mensaje; // Mensaje pintados en el canvas que indica estado de la partida.
 	private boolean partidaEnCurso; // True se el juego esta en curso, false si ha teremiando.
-
+	private static final int ANCHO_CART = 79;
+	private static final int ALTO_CART = 123;
+	private static final int ESPACIO = 20;
+	
 	/**
 	 * El método start inicializa los componentes gráficos (GUI) y el manejo de
 	 * eventos. El root pane es un BorderPane. Un Canvas, donde las cartas serán
@@ -41,12 +44,11 @@ public class CartaMayorMenor extends Application {
 		cartasImagen = new Image("cards.png");
 
 		// Cada carta tiene 79 x 123 pixels, luego la carta que está en la esquina
-		// superior izquierda
-		// será (79*C,123*F) C= núm. columna, F= núm fila
-		// Espacio para 4 cartas, con 20 pixels espacio de separación
-		// y espacio en parte inferior para el mensaje.
+		// superior izquierda estará en (79*C,123*F) C= núm. columna, F= núm fila
+		// Canvas con espacio para 4 cartas, con 20 pixels de separación
+		// y espacio en parte inferior de 80 para el mensaje.
 
-		tapete = new Canvas(4 * 99 + 20, 123 + 80);
+		tapete = new Canvas(4 * (ANCHO_CART+ESPACIO) + ESPACIO, ALTO_CART + 80);
 
 		Button mayor = new Button("Mayor");
 		mayor.setOnAction(e -> juegaMayor());
@@ -54,6 +56,8 @@ public class CartaMayorMenor extends Application {
 		menor.setOnAction(e -> juegaMenor());
 		Button nuevaPartida = new Button("Nueva Partida");
 		nuevaPartida.setOnAction(e -> nuevaPartida());
+		
+		// Crea el hbox y mete dentro los botones
 
 		HBox barraBotones = new HBox(mayor, menor, nuevaPartida);
 
@@ -79,8 +83,7 @@ public class CartaMayorMenor extends Application {
 		// HBox.setHgrow(lower, Priority.ALWAYS);
 		// HBox.setHgrow(newGame, Priority.ALWAYS);
 
-		// Enlazamos los botones con la propiedad partidaEnCurso
-
+		
 		BorderPane root = new BorderPane();
 		root.setCenter(tapete);
 		root.setBottom(barraBotones);
@@ -119,10 +122,11 @@ public class CartaMayorMenor extends Application {
 		g.fillText(mensaje, 20, 180);
 		int cartasMano = mano.dameNumCartas();
 		for (int i = 0; i < cartasMano; i++)
-			pintaCarta(g, mano.dameCarta(i), 20 + i * 99, 20);
+			// Pinta carta. Se pasa canvas y coord. x,y
+			pintaCarta(g, mano.dameCarta(i), ESPACIO + i * (ANCHO_CART+ESPACIO), 20);
 
 		if (partidaEnCurso)
-			pintaCarta(g, null, 20 + cartasMano * 99, 20);
+			pintaCarta(g, null,ESPACIO + cartasMano * (ANCHO_CART+ESPACIO), 20);
 
 	}
 
@@ -137,6 +141,7 @@ public class CartaMayorMenor extends Application {
 	 * @param y     Coordenada y de la carta en el tapete
 	 */
 	private void pintaCarta(GraphicsContext g, Carta carta, int x, int y) {
+        // Calcula fila,colum de carta en la imagen 
 		int filaCarta, columCarta;
 
 		if (carta == null) {
@@ -151,7 +156,7 @@ public class CartaMayorMenor extends Application {
 		double sx, sy; // esq. sup izq de la carta en la imagen cards.png
 		sx = 79 * columCarta;
 		sy = 123 * filaCarta;
-		g.drawImage(cartasImagen, sx, sy, 79, 123, x, y, 79, 123);
+		g.drawImage(cartasImagen, sx, sy, ANCHO_CART, ALTO_CART, x, y, ANCHO_CART, ALTO_CART);
 
 	} // fin pintaCarta()
 
@@ -168,9 +173,10 @@ public class CartaMayorMenor extends Application {
 		mano.cogeCarta(nuevaCarta);
 
 		if (nuevaCarta.getValor() < ultimaCartaMano.getValor()) {
-			if (mano.dameNumCartas() == 4)
+			if (mano.dameNumCartas() == 4) {
 				mensaje = "¡Has ganado! Has acertado tres tiradas seguidas.";
-			else {
+				partidaEnCurso = false;
+			} else {
 				mensaje = "¡Acertaste! Prueba con la siguiente";
 			}
 
@@ -195,9 +201,10 @@ public class CartaMayorMenor extends Application {
 		mano.cogeCarta(nuevaCarta);
 
 		if (nuevaCarta.getValor() > ultimaCartaMano.getValor()) {
-			if (mano.dameNumCartas() == 4)
+			if (mano.dameNumCartas() == 4) {
 				mensaje = "¡Has ganado! Has acertado tres tiradas seguidas.";
-			else {
+				partidaEnCurso = false;
+			} else {
 				mensaje = "¡Acertaste! Prueba con la siguiente";
 			}
 
