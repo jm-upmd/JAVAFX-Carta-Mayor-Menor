@@ -109,9 +109,7 @@ public class CartaMayorMenor extends Application {
 		mano.cogeCarta(baraja.extraeCarta());
 		mensaje = "¿Es la próxima carta mayor o menor?";
 		partidaEnCurso = true;
-		nuevaPartida.setDisable(true);
-		mayor.setDisable(false);
-		menor.setDisable(false);
+
 		pintaTapete();
 	}
 
@@ -168,11 +166,11 @@ public class CartaMayorMenor extends Application {
 	} // fin pintaCarta()
 
 	private void juegaMenor() {
-//		if (partidaEnCurso == false) {
-//			mensaje = "Pulsa \"Nueva Partida\" para jugar una nueva partida";
-//			pintaTapete();
-//			return;
-//		}
+		if (partidaEnCurso == false) {
+			mensaje = "Pulsa \"Nueva Partida\" para jugar una nueva partida";
+			pintaTapete();
+			return;
+		}
 
 		Carta nuevaCarta = baraja.extraeCarta();
 		Carta ultimaCartaMano = mano.dameCarta(mano.dameNumCartas() - 1);
@@ -182,20 +180,16 @@ public class CartaMayorMenor extends Application {
 		if (nuevaCarta.getValor() < ultimaCartaMano.getValor()) {
 			if (mano.dameNumCartas() == 4) {
 				mensaje = "¡Has ganado! Has acertado tres tiradas seguidas.";
-				//partidaEnCurso = false;
-				mayor.setDisable(true);
-				menor.setDisable(true);
-				nuevaPartida.setDisable(false);
+				partidaEnCurso = false;
+
 			} else {
 				mensaje = "¡Acertaste! Prueba con la siguiente";
 			}
 
 		} else {
 			mensaje = "¡No acertaste! Has perdido.";
-			//partidaEnCurso = false;
-			mayor.setDisable(true);
-			menor.setDisable(true);
-			nuevaPartida.setDisable(false);
+			partidaEnCurso = false;
+
 		}
 
 		pintaTapete();
@@ -203,11 +197,11 @@ public class CartaMayorMenor extends Application {
 	} // fin JuegaMenor
 
 	private void juegaMayor() {
-//		if (partidaEnCurso == false) {
-//			mensaje = "Pulsa \"Nueva Partida\" para jugar una nueva partida";
-//			pintaTapete();
-//			return;
-//		}
+		if (partidaEnCurso == false) {
+			mensaje = "Pulsa \"Nueva Partida\" para jugar una nueva partida";
+			pintaTapete();
+			return;
+		}
 		Carta nuevaCarta = baraja.extraeCarta();
 		Carta ultimaCartaMano = mano.dameCarta(mano.dameNumCartas() - 1);
 
@@ -216,21 +210,16 @@ public class CartaMayorMenor extends Application {
 		if (nuevaCarta.getValor() > ultimaCartaMano.getValor()) {
 			if (mano.dameNumCartas() == 4) {
 				mensaje = "¡Has ganado! Has acertado tres tiradas seguidas.";
-				//partidaEnCurso = false;
-				mayor.setDisable(true);
-				menor.setDisable(true);
-				nuevaPartida.setDisable(false);
+				partidaEnCurso = false;
+
 			} else {
 				mensaje = "¡Acertaste! Prueba con la siguiente";
 			}
 
 		} else {
 			mensaje = "¡No acertaste! Has perdido.";
-			mayor.setDisable(true);
-			menor.setDisable(true);
-			nuevaPartida.setDisable(false);
 			
-			//partidaEnCurso = false;
+			partidaEnCurso = false;
 		}
 
 		pintaTapete();
