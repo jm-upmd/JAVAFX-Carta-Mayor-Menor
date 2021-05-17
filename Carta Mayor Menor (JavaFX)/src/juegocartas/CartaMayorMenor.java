@@ -31,6 +31,8 @@ public class CartaMayorMenor extends Application {
 	private static final int ALTO_CART = 123;
 	private static final int ESPACIO = 20;
 	
+	Button mayor, menor, nuevaPartida;
+	
 	/**
 	 * El método start inicializa los componentes gráficos (GUI) y el manejo de
 	 * eventos. El root pane es un BorderPane. Un Canvas, donde las cartas serán
@@ -41,6 +43,8 @@ public class CartaMayorMenor extends Application {
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		
+		// Lee la imagen de las cartas.
 		cartasImagen = new Image("cards.png");
 
 		// Cada carta tiene 79 x 123 pixels, luego la carta que está en la esquina
@@ -50,11 +54,11 @@ public class CartaMayorMenor extends Application {
 
 		tapete = new Canvas(4 * (ANCHO_CART+ESPACIO) + ESPACIO, ALTO_CART + 80);
 
-		Button mayor = new Button("Mayor");
+		mayor = new Button("Mayor");
 		mayor.setOnAction(e -> juegaMayor());
-		Button menor = new Button("Menor");
+		menor = new Button("Menor");
 		menor.setOnAction(e -> juegaMenor());
-		Button nuevaPartida = new Button("Nueva Partida");
+		nuevaPartida = new Button("Nueva Partida");
 		nuevaPartida.setOnAction(e -> nuevaPartida());
 		
 		// Crea el hbox y mete dentro los botones
@@ -105,6 +109,9 @@ public class CartaMayorMenor extends Application {
 		mano.cogeCarta(baraja.extraeCarta());
 		mensaje = "¿Es la próxima carta mayor o menor?";
 		partidaEnCurso = true;
+		nuevaPartida.setDisable(true);
+		mayor.setDisable(false);
+		menor.setDisable(false);
 		pintaTapete();
 	}
 
@@ -154,18 +161,18 @@ public class CartaMayorMenor extends Application {
 		}
 
 		double sx, sy; // esq. sup izq de la carta en la imagen cards.png
-		sx = 79 * columCarta;
-		sy = 123 * filaCarta;
+		sx = ANCHO_CART * columCarta;
+		sy = ALTO_CART * filaCarta;
 		g.drawImage(cartasImagen, sx, sy, ANCHO_CART, ALTO_CART, x, y, ANCHO_CART, ALTO_CART);
 
 	} // fin pintaCarta()
 
 	private void juegaMenor() {
-		if (partidaEnCurso == false) {
-			mensaje = "Pulsa \"Nueva Partida\" para jugar una nueva partida";
-			pintaTapete();
-			return;
-		}
+//		if (partidaEnCurso == false) {
+//			mensaje = "Pulsa \"Nueva Partida\" para jugar una nueva partida";
+//			pintaTapete();
+//			return;
+//		}
 
 		Carta nuevaCarta = baraja.extraeCarta();
 		Carta ultimaCartaMano = mano.dameCarta(mano.dameNumCartas() - 1);
@@ -175,14 +182,20 @@ public class CartaMayorMenor extends Application {
 		if (nuevaCarta.getValor() < ultimaCartaMano.getValor()) {
 			if (mano.dameNumCartas() == 4) {
 				mensaje = "¡Has ganado! Has acertado tres tiradas seguidas.";
-				partidaEnCurso = false;
+				//partidaEnCurso = false;
+				mayor.setDisable(true);
+				menor.setDisable(true);
+				nuevaPartida.setDisable(false);
 			} else {
 				mensaje = "¡Acertaste! Prueba con la siguiente";
 			}
 
 		} else {
 			mensaje = "¡No acertaste! Has perdido.";
-			partidaEnCurso = false;
+			//partidaEnCurso = false;
+			mayor.setDisable(true);
+			menor.setDisable(true);
+			nuevaPartida.setDisable(false);
 		}
 
 		pintaTapete();
@@ -190,11 +203,11 @@ public class CartaMayorMenor extends Application {
 	} // fin JuegaMenor
 
 	private void juegaMayor() {
-		if (partidaEnCurso == false) {
-			mensaje = "Pulsa \"Nueva Partida\" para jugar una nueva partida";
-			pintaTapete();
-			return;
-		}
+//		if (partidaEnCurso == false) {
+//			mensaje = "Pulsa \"Nueva Partida\" para jugar una nueva partida";
+//			pintaTapete();
+//			return;
+//		}
 		Carta nuevaCarta = baraja.extraeCarta();
 		Carta ultimaCartaMano = mano.dameCarta(mano.dameNumCartas() - 1);
 
@@ -203,14 +216,21 @@ public class CartaMayorMenor extends Application {
 		if (nuevaCarta.getValor() > ultimaCartaMano.getValor()) {
 			if (mano.dameNumCartas() == 4) {
 				mensaje = "¡Has ganado! Has acertado tres tiradas seguidas.";
-				partidaEnCurso = false;
+				//partidaEnCurso = false;
+				mayor.setDisable(true);
+				menor.setDisable(true);
+				nuevaPartida.setDisable(false);
 			} else {
 				mensaje = "¡Acertaste! Prueba con la siguiente";
 			}
 
 		} else {
 			mensaje = "¡No acertaste! Has perdido.";
-			partidaEnCurso = false;
+			mayor.setDisable(true);
+			menor.setDisable(true);
+			nuevaPartida.setDisable(false);
+			
+			//partidaEnCurso = false;
 		}
 
 		pintaTapete();
